@@ -6,7 +6,6 @@ const UrlSchema = new mongoose.Schema(
     code: { type: String, required: true, unique: true, index: true },
     shortUrl: { type: String, required: true },
     baseUrl: { type: String, required: true },
-    totalAccesses: { type: Number, default: 0},
     countries: [{name: String, counter: {type: Number, default: 1}}],
     dailyFrequency: {type: Number, default: 0}
   },
