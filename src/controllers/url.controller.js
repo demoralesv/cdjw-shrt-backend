@@ -43,8 +43,12 @@ async function getStats(req, res) {
 
   const totalAccesses = await AccessLog.countDocuments({ urlId });
 
-  const countries = await AccessLog.distinct("country", { urlId });
-  
+  const countryCounts = (url.countries || [])
+    .map((c) => ({ country: c.name, count: c.counter }))
+    .sort((a, b) => b.count - a.count);
+
+
+
   // frecuencia por día (YYYY-MM-DD)
   const dailyFrequency = await AccessLog.aggregate([
     { $match: { urlId } },
@@ -66,7 +70,7 @@ async function getStats(req, res) {
     shortUrl: url.shortUrl,
     createdAt: url.createdAt,
     totalAccesses,
-    countries,
+    countryCounts,
     dailyFrequency
   });
 }
