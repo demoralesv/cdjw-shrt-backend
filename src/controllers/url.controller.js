@@ -44,7 +44,7 @@ async function getStats(req, res) {
   const totalAccesses = await AccessLog.countDocuments({ urlId });
 
   const countries = await AccessLog.distinct("country", { urlId });
-
+  
   // frecuencia por día (YYYY-MM-DD)
   const dailyFrequency = await AccessLog.aggregate([
     { $match: { urlId } },
