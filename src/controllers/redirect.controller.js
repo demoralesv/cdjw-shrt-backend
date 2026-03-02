@@ -20,7 +20,12 @@ async function redirect(req, res) {
     country,
     accessedAt: new Date()
   });
-
+  url.totalAccesses += 1;
+  await Url.updateOne(
+    { code: url.code },
+    { $addToSet: {countries: country}}
+  );
+  
   return res.redirect(302, url.originalUrl);
 }
 

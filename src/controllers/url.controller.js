@@ -1,6 +1,7 @@
 const { nanoid } = require("nanoid");
 const Url = require("../models/Url");
 
+
 function isValidHttpUrl(value) {
   try {
     const u = new URL(value);
