@@ -20,12 +20,23 @@ async function redirect(req, res) {
     country,
     accessedAt: new Date()
   });
-  url.totalAccesses += 1;
-  await Url.updateOne(
-    { code: url.code },
-    { $addToSet: {countries: country}}
+
+  const exists = await Url.updateOne(
+    { code: url.code,
+     "countries.name": country
+    },
+    {
+      $inc: {"countries.$.counter": 1}
+    }
   );
-  
+  if (exists.matchedCount === 0){
+    await Url.updateOne(
+      {code: url.code},
+      {
+        $push: { countries: {name: country, counter: 1}}
+      }
+    )
+  }
   return res.redirect(302, url.originalUrl);
 }
 
