@@ -7,7 +7,7 @@ const UrlSchema = new mongoose.Schema(
     shortUrl: { type: String, required: true },
     baseUrl: { type: String, required: true },
     countries: [{name: String, counter: {type: Number, default: 1}}],
-    dailyFrequency: {type: Number, default: 0}
+    dailyFrequency: [{dates: Date, counter: {type: Number, default: 1}}]
   },
   { timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" } }
 );

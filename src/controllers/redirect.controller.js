@@ -37,6 +37,22 @@ async function redirect(req, res) {
       }
     )
   }
+  const exists2 = await Url.updateOne(
+    { code: url.code,
+     "dailyFrequency.dates": new Date().setUTCHours(0,0,0)
+    },
+    {
+      $inc: {"dailyFrequency.$.counter": 1}
+    }
+  );
+  if (exists2.matchedCount === 0){
+    await Url.updateOne(
+      {code: url.code},
+      {
+        $push: { dailyFrequency: {dates: new Date().setUTCHours(0,0,0), counter: 1}}
+      }
+    )
+  }
   return res.redirect(302, url.originalUrl);
 }
 
