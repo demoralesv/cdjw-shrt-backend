@@ -39,7 +39,7 @@ async function redirect(req, res) {
   }
   const exists2 = await Url.updateOne(
     { code: url.code,
-     "dailyFrequency.dates": new Date().setUTCHours(0,0,0)
+     "dailyFrequency.dates": new Date().setUTCHours(0,0,0,0)
     },
     {
       $inc: {"dailyFrequency.$.counter": 1}
@@ -49,7 +49,7 @@ async function redirect(req, res) {
     await Url.updateOne(
       {code: url.code},
       {
-        $push: { dailyFrequency: {dates: new Date().setUTCHours(0,0,0), counter: 1}}
+        $push: { dailyFrequency: {dates: new Date().setUTCHours(0,0,0,0), counter: 1}}
       }
     )
   }
