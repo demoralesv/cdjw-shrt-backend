@@ -2,6 +2,10 @@ const Url = require("../models/Url");
 const AccessLog = require("../models/AccessLog");
 const { getCountryFromIP } = require("../services/geoip.service");
 
+// Obtener la fecha en la zona horaria de Costa Rica (UTC-6)
+const crDate = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Costa_Rica' }));
+crDate.setUTCHours(0, 0, 0, 0);
+
 function getClientIP(req) {
   return req.ip; // con trust proxy toma X-Forwarded-For
 }
@@ -37,9 +41,12 @@ async function redirect(req, res) {
       }
     )
   }
+
+
+
   const exists2 = await Url.updateOne(
     { code: url.code,
-     "dailyFrequency.dates": new Date().setUTCHours(0,0,0,0)
+     "dailyFrequency.dates": crDate
     },
     {
       $inc: {"dailyFrequency.$.counter": 1}
@@ -49,7 +56,7 @@ async function redirect(req, res) {
     await Url.updateOne(
       {code: url.code},
       {
-        $push: { dailyFrequency: {dates: new Date().setUTCHours(0,0,0,0), counter: 1}}
+        $push: { dailyFrequency: {dates: crDate, counter: 1}}
       }
     )
   }

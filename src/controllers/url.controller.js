@@ -62,10 +62,25 @@ async function getStats(req, res) {
   const dailyFrequency = await AccessLog.aggregate([
     { $match: { urlId } },
     {
+      $addFields: {
+        // Convertir la fecha a Costa Rica (UTC-6)
+        accessedAtCR: {
+          $dateToString: {
+            format: "%Y-%m-%d",
+            date: {
+              $dateSubtract: {
+                startDate: "$accessedAt",
+                unit: "hour",
+                amount: 6  // Restar 6 horas para ajustarse a la hora de Costa Rica (UTC-6)
+              }
+            }
+          }
+        }
+      }
+    },
+    {
       $group: {
-        _id: {
-          $dateToString: { format: "%Y-%m-%d", date: "$accessedAt" }
-        },
+        _id: "$accessedAtCR",
         count: { $sum: 1 }
       }
     },
