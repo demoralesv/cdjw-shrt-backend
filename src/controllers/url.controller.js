@@ -17,15 +17,6 @@ async function createShortUrl(req, res) {
     return res.status(400).json({ error: "URL inválida" });
   }
 
-async function listUrls(req, res) {
-  const UrlModel = require("../models/Url");
-  const urls = await UrlModel.find({}, { originalUrl: 1, code: 1, createdAt: 1 })
-    .sort({ originalUrl: 1 })
-    .lean();
-
-  res.json(urls);
-}
-
   const baseUrl = process.env.BASE_URL;
   if (!baseUrl) return res.status(500).json({ error: "BASE_URL no configurada" });
 
@@ -38,6 +29,15 @@ async function listUrls(req, res) {
 
   const doc = await Url.create({ originalUrl, code, shortUrl, baseUrl });
   return res.status(201).json(doc);
+}
+
+async function listUrls(req, res) {
+  const UrlModel = require("../models/Url");
+  const urls = await UrlModel.find({}, { originalUrl: 1, code: 1, createdAt: 1 })
+    .sort({ originalUrl: 1 })
+    .lean();
+
+  res.json(urls);
 }
 
 async function getStats(req, res) {
